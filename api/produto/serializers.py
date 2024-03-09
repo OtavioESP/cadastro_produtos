@@ -1,5 +1,6 @@
-from produto.models import Produto
 from rest_framework import serializers
+
+from .models import Produto
 
 
 class ProdutoSerializer(serializers.ModelSerializer):
@@ -7,7 +8,19 @@ class ProdutoSerializer(serializers.ModelSerializer):
         model = Produto
         fields = '__all__'
 
-class ProdutoForm(serializers.ModelSerializer):
+class ProdutoFormulario(serializers.ModelSerializer):
     class Meta:
         model = Produto
-        fields = '__all__'
+        fields = [
+            'codigo',
+            'titulo',
+            'preco',
+        ]
+
+class ProdutoAtualizaForm(serializers.ModelSerializer):
+    class Meta:
+        model = Produto
+        fields = [
+            'titulo',
+            'preco',
+        ]

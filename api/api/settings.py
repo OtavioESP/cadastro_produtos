@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from os import getenv
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,13 +22,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ph+dd(im5##5rn8rt49*9jh_7c-84-*wrt8*am&-t-%mgtp(ug'
+SECRET_KEY = getenv('SECRET_KEY', None)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = getenv('DEBUG')
 
 ALLOWED_HOSTS = []
 
+REDIS = {
+    'CANAL_REDIS': getenv('CANAL_REDIS', "produtos"),
+    'HOST_REDIS': getenv('HOST_REDIS', "localhost"),
+    'PORTA_REDIS': getenv('PORTA_REDIS', 6379),
+    'FILA_REDIS': getenv('FILA_REDIS', 0),
+}
+
+CHAVE_SISTEMA = getenv('CHAVE_SISTEMA', 'api_produtos')
 
 # Application definition
 
@@ -41,6 +51,7 @@ INSTALLED_APPS = [
     'login.apps.LoginConfig',
     'produto.apps.ProdutoConfig',
     'django_filters',
+    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
@@ -76,19 +87,17 @@ TEMPLATES = [
 WSGI_APPLICATION = 'api.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': getenv('BD_NOME'),
+        'USER': getenv('BD_USUARIO'),
+        'PASSWORD': getenv('BD_SENHA'),
+        'HOST': getenv('BD_HOST'),
+        'PORT': getenv('BD_PORTA'),
     }
 }
 
-
-# Password validation
-# https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -105,6 +114,17 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+         'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=int(getenv('ACCESS_TOKEN_LIFETIME', 15))),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=int(getenv('REFRESH_TOKEN_LIFETIME', 15))),
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/

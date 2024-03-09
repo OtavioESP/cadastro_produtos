@@ -1,0 +1,6 @@
+annotated-types==0.6.0
+async-timeout==4.0.3
+psycopg2-binary==2.9.9
+pydantic_core==2.16.3
+redis==5.0.2
+typing_extensions==4.10.0
