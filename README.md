@@ -188,4 +188,4 @@ Em seguida:
 $ python main.py
 ```
 
-Para testar agora basta usar o seu aplicativo de requisições conforme o
+Para testar agora basta usar o seu aplicativo de requisições conforme o mostrado no passo 2.
